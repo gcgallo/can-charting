@@ -1,0 +1,55 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- uncomment lines below to include extra p5 libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+  <script src="jquery.csv.js"></script>
+  <style> body {padding: 0; margin: 0;} </style>
+</head>
+
+<body>
+<form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+
+  <fieldset>
+    <h2>CSV File</h2>
+     <input type='file' id='fileinput'>
+     <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
+  </fieldset>
+</form>
+
+<canvas id="myChart" width="400" height="400"></canvas>
+
+<script>
+
+//var data = $.csv.toArrays(dump077-07D.csv);
+
+var ctx = document.getElementById('myChart').getContext('2d');
+
+/*var columns = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
+require("csv-to-array")({
+   file: "dump077-07D.csv",
+   columns: columns
+}, function (err, array) {
+  console.log(err || array);
+});*/
+
+var myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['1', '2', '3', '4', '5', '6', '7'],
+    datasets: [{
+      label: '078 byte0',
+      data: [12, 19, 3, 17, 6, 3, 7],
+      backgroundColor: "rgba(153,255,51,0.4)"
+    }, {
+      label: '076 byte0',
+      data: [2, 29, 5, 5, 2, 3, 10],
+      backgroundColor: "rgba(255,153,0,0.4)"
+    }]
+  }
+});
+
+</script>
+</body>
+</html>
+
