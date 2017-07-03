@@ -8,30 +8,65 @@
 </head>
 
 <body>
-<form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
 
-  <fieldset>
-    <h2>CSV File</h2>
-     <input type='file' id='fileinput'>
-     <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
-  </fieldset>
-</form>
+<input type="file" id="fileinput" />
 
 <canvas id="myChart" width="400" height="400"></canvas>
 
+<pre id="fileDisplayArea"><pre>
+
 <script>
 
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+  // Great success! All the File APIs are supported.
+} else {
+  alert('The File APIs are not fully supported in this browser.');
+}
+
+function readSingleFile(evt) {
+    //Retrieve the first (and only!) File from the FileList object
+    var f = evt.target.files[0]; 
+    var fileDisplayArea = document.getElementById('fileDisplayArea');
+    if (f) {
+      var r = new FileReader();
+      r.onload = function(e) { 
+	      var contents = e.target.result;
+        alert( "Got the file.n" 
+              +"name: " + f.name + "n"
+              +"type: " + f.type + "n"
+              +"size: " + f.size + " bytesn"
+              + "starts with: " + contents.substr(1, contents.indexOf("n"))
+        );  
+        fileDisplayArea.innerText = r.result;
+        var CANarray = csvToArray(r.result);
+        console.log(CANarray);
+      }
+      r.readAsText(f);
+    } else { 
+      alert("Failed to load file");
+    }
+  }
+
+  document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+
 //var data = $.csv.toArrays(dump077-07D.csv);
+function csvToArray (csv) {
+    rows  = csv.split("\n");
+    return rows.map(function (row) {
+    	return row.split(",");
+    });
+};
+
+// Hard-coded for brevity, but you can set this variable with FileReader
+var csv   = "the,quick,brown,fox\n"+
+    	    "jumps,over,the,lazy,dog";
+
+var array = csvToArray(csv);
+
+console.log(array);
 
 var ctx = document.getElementById('myChart').getContext('2d');
-
-/*var columns = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
-require("csv-to-array")({
-   file: "dump077-07D.csv",
-   columns: columns
-}, function (err, array) {
-  console.log(err || array);
-});*/
 
 var myChart = new Chart(ctx, {
   type: 'line',
